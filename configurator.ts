@@ -1,5 +1,10 @@
 ///<reference path="babylon.d.ts" />
-class TestConfigurator{
+
+import { Scene, Mesh } from "babylonjs";
+
+
+
+class MyConfigurator{
     private _canvas: HTMLCanvasElement;
     private _engine: BABYLON.Engine;
     private _scene: BABYLON.Scene;
@@ -17,17 +22,22 @@ class TestConfigurator{
         let sphere=BABYLON.MeshBuilder.CreateSphere('sphere',{segments:16,diameter:2},this._scene);
         sphere.position.y=1;
         let ground=BABYLON.MeshBuilder.CreateGround('ground',{width:6,height:6,subdivisions:2},this._scene);
-        )
     }
     doRender():void{
         this._engine.runRenderLoop(()=>{this._scene.render();})
         window.addEventListener('resize',()=>{
             this._scene.render();
-        })
+        })}
+    getScene():BABYLON.Scene{
+        return this._scene;
     }
 }
+
+
 window.addEventListener('DOMContentLoaded',()=>{
-    let configurator = new TestConfigurator('renderCanvas');
+    let configurator = new MyConfigurator('renderCanvas');
     configurator.createScene();
-    configurator.doRender();
+    BABYLON.SceneLoader.ImportMesh("","","interior.obj",configurator.getScene(),function(object){
+        console.log(object);
+});
 })

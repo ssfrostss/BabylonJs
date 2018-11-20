@@ -1,10 +1,12 @@
+"use strict";
 ///<reference path="babylon.d.ts" />
-var Configurator = /** @class */ (function () {
-    function Configurator(canvasElement) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var MyConfigurator = /** @class */ (function () {
+    function MyConfigurator(canvasElement) {
         this._canvas = document.getElementById(canvasElement);
         this._engine = new BABYLON.Engine(this._canvas, true);
     }
-    Configurator.prototype.createScene = function () {
+    MyConfigurator.prototype.createScene = function () {
         this._scene = new BABYLON.Scene(this._engine);
         this._camera = new BABYLON.ArcRotateCamera("camera1", 0, 0, 10, BABYLON.Vector3.Zero(), this._scene);
         this._camera.attachControl(this._canvas, false);
@@ -13,17 +15,23 @@ var Configurator = /** @class */ (function () {
         sphere.position.y = 1;
         var ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 6, height: 6, subdivisions: 2 }, this._scene);
     };
-    Configurator.prototype.doRender = function () {
+    MyConfigurator.prototype.doRender = function () {
         var _this = this;
         this._engine.runRenderLoop(function () { _this._scene.render(); });
         window.addEventListener('resize', function () {
             _this._scene.render();
         });
     };
-    return Configurator;
+    MyConfigurator.prototype.getScene = function () {
+        return this._scene;
+    };
+    return MyConfigurator;
 }());
 window.addEventListener('DOMContentLoaded', function () {
-    var configurator = new Configurator('renderCanvas');
+    var configurator = new MyConfigurator('renderCanvas');
     configurator.createScene();
-    configurator.doRender();
+    BABYLON.SceneLoader.ImportMesh("", "", "interior.obj", configurator.getScene(), function (object) {
+        console.log(object);
+    });
 });
+//# sourceMappingURL=configurator.js.map
